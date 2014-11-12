@@ -1,0 +1,265 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>页面切换</title>
+    <base target="_blank">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes, width=device-width">   
+    <style type="text/css">
+     
+    .wrap{
+      width:980px;
+      margin:0 auto 40px;
+      padding:10px 20px;
+      background:#fff;
+    }      
+    
+    .card-switch{
+      position:relative;
+      width:980px;
+      height:300px;
+      margin:40px 0 50px;
+    }
+    .card-switch img{
+      width:100%;
+      display:block;
+    }
+    .card-switch a:hover img,.card-switch img:hover{
+      opacity:1;
+      filter: alpha(opacity=100);
+    }
+    .card-switch .item{
+      position:absolute;
+      overflow:hidden;
+    }
+    .card-switch .item-box{
+      position:relative;
+    }
+    .card-switch .item-box p{
+      position:absolute;
+      left:0;
+      bottom:0;
+      width:96%;
+      height:50px;
+      padding:0 2%;
+      line-height:50px;
+      font-size:15px;
+      color:#fff;      
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .card-switch .prev,.card-switch .next{
+      position:absolute;
+      top:150px;
+      width:50px;
+      height:50px;
+      z-index:2;
+      background-image:url(images/card_switch_btn.png);
+      cursor:pointer;
+    }
+    .card-switch .prev{
+      left:190px;
+      background-position:0 0;
+    }
+    .card-switch .next{
+      left:530px;
+      background-position:-50px 0;
+    }
+    
+    </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card-switch" id="container">
+      <div class="prev"></div>
+        <div class="next"></div>
+        <div class="item" id="page1" style="top:0;left:225px;z-index:1;width:320px;height:480px; background:url('images/bg.jpg') no-repeat #fff; background-size:cover;">          
+        </div>
+        <div class="item" id="page2" style="top:37px;left:530px;z-index:0;width:240px;height:360px;opacity:0.5;background:url('images/bg.jpg') no-repeat #fff; background-size:cover;">          
+        </div>
+        <div class="item" id="page3" style="top:37px;left:265px;z-index:0;width:240px;height:360px;opacity::;background:url('images/bg.jpg') no-repeat #fff; background-size:cover;">          
+        </div>
+        <div class="item" id="page4" style="top:37px;left:0;z-index:0;width:240px;height:360px;opacity:0.5;background:url('images/bg.jpg') no-repeat #fff; background-size:cover;">          
+        </div>
+        <div class="item" id="page4" style="top:37px;left:0;z-index:0;width:240px;height:360px;opacity:0.5;background:url('images/bg.jpg') no-repeat #fff; background-size:cover;">          
+        </div>
+  </div>
+<script type="text/javascript" src="http://static.21cnimg.com/lib/jquery/jquery-1.7.2.min.js"></script>
+<script src="hm.js"></script> 
+<script type="text/javascript">
+  (function($){
+    var jQuerycontainer = $(".card-switch");
+    var jQueryitem = jQuerycontainer.find(".item");
+    var itemLen = jQueryitem.length;
+    var index = 0;
+    var prevIndex = itemLen-1;
+    var nextIndex = 1;
+    var animating = itemLen;
+    var currentItemStyle = {"top":"0","left":"225px","z-index":"1","width":"320px","height":"480px","opacity":"1"};
+    var prevItemStyle = {"top":"37px","left":"0","z-index":"0","width":"240px","height":"360px","opacity":"0.5"};
+    var nextItemStyle = {"top":"37px","left":"530px","z-index":"0","width":"240px","height":"360px","opacity":"0.5"};
+    var otherItemStyle = {"top":"37px","left":"265px","z-index":"0","width":"240px","height":"360px","opacity":"0"};
+    var timer;
+    var allowTimer = true;
+    
+    function prev(){
+      if(index==0){
+        index = itemLen-1;
+      }else{
+        index--;
+      }
+
+      if(prevIndex==0){
+        prevIndex = itemLen-1;
+      }else{
+        prevIndex--;
+      }
+
+      if(nextIndex==0){
+        nextIndex = itemLen-1;
+      }else{
+        nextIndex--;
+      }
+      animate();
+    }
+    
+    function next(){
+      if(index==itemLen-1){
+        index = 0;
+      }else{
+        index++;
+      }
+
+      if(prevIndex==itemLen-1){
+        prevIndex = 0;
+      }else{
+        prevIndex++;
+      }
+
+      if(nextIndex==itemLen-1){
+        nextIndex = 0;
+      }else{
+        nextIndex++;
+      }
+      animate();
+    }
+    
+    function animate(){
+      if(animating!=itemLen){
+        return;
+      }
+      animating = itemLen;
+      jQueryitem.each(function(idx){
+        if(idx==index){
+          $(this).animate(currentItemStyle,"fast",function(){
+            animated();           
+          });
+        }
+        else if(idx==prevIndex){
+          $(this).animate(prevItemStyle,"fast",function(){
+            animated();
+          });
+        }
+        else if(idx==nextIndex){
+          $(this).animate(nextItemStyle,"fast",function(){
+            animated();
+          });
+        }
+        else{
+          $(this).animate(otherItemStyle,"fast",function(){
+            animated();
+          });
+        }
+      });
+    }
+    
+    function animated(){
+      animating--;
+      if(animating==0){
+        animating = itemLen;
+        if(allowTimer){
+          /*startTimer();*/
+        }
+      }
+    }    
+    /*function startTimer(){
+      timer = setTimeout(function(){next();},5000);
+    }*/    
+    jQuerycontainer.find(".prev").bind("click",function(){
+      prev();
+    });
+    
+    jQuerycontainer.find(".next").bind("click",function(){
+      next();
+    });
+    
+    jQuerycontainer.bind("mouseenter",function(){
+      allowTimer = false;
+      clearTimeout(timer);
+    });
+    
+    jQuerycontainer.bind("mouseleave",function(){
+      allowTimer = true;
+     /* startTimer();*/
+    });
+    
+    /*startTimer();*/
+    var config = {
+    container: document.getElementById("page2"),
+    width:320,
+    height:480,
+    radius: 100,    
+    maxOpacity: .5,
+    minOpacity: 0,
+    blur: .75,    
+    gradient: {
+    // enter n keys between 0 and 1 here
+    // for gradient color customization
+    '.5': 'green',
+    '.8': 'yellow',
+    '.95': 'red'
+  }
+};
+var heatmapInstance = h337.create(config);
+var dataPoints =[{ 
+                  x: 100,  
+                  y: 100, 
+                  radius: 25,
+                  value: 1 
+                },{ 
+                  x: 200,  
+                  y: 200,
+                  radius: 50, 
+                  value: 10
+                },{ 
+                  x: 300,  
+                  y: 300,
+                  radius: 50, 
+                  value: 10 
+                },{ 
+                  x: 300,  
+                  y: 301,
+                  radius: 75, 
+                  value: 10 
+                }
+                  ];
+/*heatmapInstance.addData(dataPoints);*/
+var dataG = {
+  max: 10,
+  min: 0,
+  data: dataPoints
+};
+heatmapInstance.setData(dataG);
+ 
+  })(jQuery);
+</script>
+</body>
+</html>
+
+
+
+
+
