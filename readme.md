@@ -1,3 +1,3 @@
 ## Instructions
 
-Just need to do as the demo page.
+Check out the demo page and do as the demo page.
